@@ -1,0 +1,14 @@
+.heading {
+  font-size: 1.5rem;
+  margin: 0.5rem 1rem;
+  text-align: left;
+  font-style: italic;
+}
+
+.outer {
+  color: var(--color-black1);
+  background-color: var(--color-white);
+  margin: 0 1rem;
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
