@@ -25,11 +25,12 @@ const Transactions = () => {
   ];
 
   return (
-    <div>
+    <div className={classes.summaryItem1}>
       <h1 className={classes.heading}>Recent Transactions</h1>
       <div className={classes.outer}>
-        {data.map((item) => (
+        {data.map((item, index) => (
           <TransactionItem
+            key={index}
             name={item.item}
             date={item.date}
             amount={item.amount}

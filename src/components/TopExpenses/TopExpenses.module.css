@@ -8,7 +8,13 @@
 .outer {
   color: var(--color-black1);
   background-color: var(--color-white);
-  margin: 0 1rem;
+  margin: 1rem 1rem;
   border-radius: 0.5rem;
   padding: 2rem;
+  height: 20rem;
+}
+
+.summaryItem2 {
+  grid-column-start: 3;
+  grid-column-end: 4;
 }

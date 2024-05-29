@@ -6,9 +6,15 @@
 }
 
 .outer {
+  height: 20rem;
   color: var(--color-black1);
   background-color: var(--color-white);
-  margin: 0 1rem;
+  margin: 1rem 1rem;
   border-radius: 0.5rem;
   padding: 2rem;
+}
+
+.summaryItem1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
