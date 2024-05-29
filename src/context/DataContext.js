@@ -3,32 +3,32 @@ import { createContext, useContext, useReducer } from "react";
 const DataContext = createContext();
 
 const initialState = {
-  walletBalance: 5000,
-  totalExpense: 0,
+  walletBalance: 4500,
+  totalExpense: 500,
   expenseType: [
-    { name: "Entertainment", value: 0 },
-    { name: "Food", value: 0 },
-    { name: "Travel", value: 0 },
+    { name: "entertainment", value: 300 },
+    { name: "food", value: 150 },
+    { name: "travel", value: 50 },
   ],
   recentTransactions: [
-    // {
-    //   item: "Samosa",
-    //   date: new Date(),
-    //   amount: 150,
-    //   type: "food",
-    // },
-    // {
-    //   item: "Movie",
-    //   date: new Date(),
-    //   amount: 300,
-    //   type: "entertainment",
-    // },
-    // {
-    //   item: "Auto",
-    //   date: new Date(),
-    //   amount: 50,
-    //   type: "travel",
-    // },
+    {
+      item: "Samosa",
+      date: new Date(),
+      amount: 150,
+      type: "food",
+    },
+    {
+      item: "Movie",
+      date: new Date(),
+      amount: 300,
+      type: "entertainment",
+    },
+    {
+      item: "Auto",
+      date: new Date(),
+      amount: 50,
+      type: "travel",
+    },
   ],
 };
 
@@ -53,6 +53,9 @@ function reducer(state, action) {
         ],
         totalExpense: state.totalExpense + Number(amount),
         walletBalance: state.walletBalance - Number(amount),
+        expenseType: state.expenseType.map((el) =>
+          el.name === type ? { ...el, value: el.value + Number(amount) } : el
+        ),
       };
     default:
       throw new Error("action type unknown!");
