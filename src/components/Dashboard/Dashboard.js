@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 import classes from "./Dashboard.module.css";
 import Card from "../Card/Card";
 import Chart from "../Chart/Chart";
 import { useData } from "../../context/DataContext";
+import BalanceModal from "../Modal/BalanceModal";
+import ExpenseModal from "../Modal/ExpenseModal";
 
 /** 
 const Data = [
@@ -16,16 +18,50 @@ const Data = [
 const Dashboard = () => {
   const { walletBalance, totalExpense, expenseType } = useData();
 
-  const handleAddIncome = () => {};
+  const [balanceModalIsOpen, setBalanceIsOpen] = useState(false);
+  const [expenseModalIsOpen, setExpenseIsOpen] = useState(false);
+
+  const openBalanceModal = () => {
+    setBalanceIsOpen(true);
+  };
+
+  function closeBalanceModal() {
+    setBalanceIsOpen(false);
+  }
+
+  const opeExpenseModal = () => {
+    setExpenseIsOpen(true);
+  };
+
+  function closeExpenseModal() {
+    setExpenseIsOpen(false);
+  }
 
   return (
     <>
       <h1 className={classes.heading}>Expense Tracker</h1>
       <div className={classes.outer}>
-        <Card type="wallet" amount={walletBalance} />
-        <Card type="expense" amount={totalExpense} />
+        <Card
+          type="wallet"
+          amount={walletBalance}
+          openModal={openBalanceModal}
+        />
+        <Card
+          type="expense"
+          amount={totalExpense}
+          openModal={opeExpenseModal}
+        />
         <Chart data={expenseType} />
       </div>
+
+      <BalanceModal
+        modalIsOpen={balanceModalIsOpen}
+        closeModal={closeBalanceModal}
+      />
+      <ExpenseModal
+        modalIsOpen={expenseModalIsOpen}
+        closeModal={closeExpenseModal}
+      />
     </>
   );
 };

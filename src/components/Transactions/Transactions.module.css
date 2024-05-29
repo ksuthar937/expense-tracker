@@ -6,7 +6,7 @@
 }
 
 .outer {
-  height: 20rem;
+  /* height: 20rem; */
   color: var(--color-black1);
   background-color: var(--color-white);
   margin: 1rem 1rem;

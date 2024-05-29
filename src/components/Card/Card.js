@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./Card.module.css";
 
-const Card = ({ type, amount }) => {
+const Card = ({ type, amount, openModal }) => {
   return (
     <div className={classes.outer}>
       <h2 className={classes.text}>
@@ -17,6 +17,7 @@ const Card = ({ type, amount }) => {
         </span>
       </h2>
       <button
+        onClick={openModal}
         className={type === "expense" ? classes.redBtn : classes.greenBtn}
       >
         + Add
