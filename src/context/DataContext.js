@@ -84,6 +84,13 @@ function reducer(state, action) {
             : transaction
         ),
       };
+    case "expense/delete":
+      return {
+        ...state,
+        recentTransactions: state.recentTransactions.filter(
+          (transaction) => transaction.id !== action.payload
+        ),
+      };
 
     case "transactions/changePage":
       return { ...state, currentPage: action.payload };
