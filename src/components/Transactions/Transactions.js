@@ -2,6 +2,7 @@ import React from "react";
 import classes from "./Transactions.module.css";
 import TransactionItem from "../TransactionItem/TransactionItem";
 import { useData } from "../../context/DataContext";
+import Pagination from "../Pagination/Pagination";
 
 /** 
 const Data = [
@@ -27,20 +28,33 @@ const Data = [
 */
 
 const Transactions = () => {
-  const { recentTransactions } = useData();
+  const { recentTransactions, itemsPerPage, currentPage } = useData();
+
+  const lastIndex = currentPage * itemsPerPage;
+
+  const firstIndex = lastIndex - itemsPerPage;
+
+  const recentTransactionsPerScreen = recentTransactions.slice(
+    firstIndex,
+    lastIndex
+  );
+
   return (
     <div className={classes.summaryItem1}>
       <h1 className={classes.heading}>Recent Transactions</h1>
       <div className={classes.outer}>
-        {recentTransactions.map((item, index) => (
-          <TransactionItem
-            key={index}
-            name={item.item}
-            date={item.date}
-            amount={item.amount}
-            type={item.type}
-          />
-        ))}
+        <div>
+          {recentTransactionsPerScreen.map((item, index) => (
+            <TransactionItem
+              key={index}
+              name={item.item}
+              date={item.date}
+              amount={item.amount}
+              type={item.type}
+            />
+          ))}
+        </div>
+        <Pagination />
       </div>
     </div>
   );

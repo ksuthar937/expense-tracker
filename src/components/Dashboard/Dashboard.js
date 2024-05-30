@@ -51,7 +51,7 @@ const Dashboard = () => {
           amount={totalExpense}
           openModal={opeExpenseModal}
         />
-        <Chart data={expenseType} />
+        {totalExpense > 0 && <Chart data={expenseType} />}
       </div>
 
       <BalanceModal

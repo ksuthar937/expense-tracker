@@ -2,6 +2,7 @@
   /* Global variables to be defined here */
   --color-white: #ffffff;
   --color-white1: #efefef;
+  --color-white2: #f1f1f1;
   --color-black: #000000;
   --color-black1: #3b3b3b;
   --color-black2: #626262;
@@ -12,6 +13,7 @@
   --color-red3: #ff9595;
   --color-green1: #89e148;
   --color-green2: #b5dc52;
+  --color-green3: #43967b;
   --color-orange1: #ff9304;
   --color-orange2: #f4bb4a;
   --color-purple1: #a000ff;

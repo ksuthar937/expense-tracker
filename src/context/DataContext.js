@@ -3,12 +3,12 @@ import { createContext, useContext, useReducer } from "react";
 const DataContext = createContext();
 
 const initialState = {
-  walletBalance: 4500,
-  totalExpense: 500,
+  walletBalance: 3250,
+  totalExpense: 1750,
   expenseType: [
     { name: "entertainment", value: 300 },
-    { name: "food", value: 150 },
-    { name: "travel", value: 50 },
+    { name: "food", value: 400 },
+    { name: "travel", value: 1050 },
   ],
   recentTransactions: [
     {
@@ -29,7 +29,21 @@ const initialState = {
       amount: 50,
       type: "travel",
     },
+    {
+      item: "Pizza",
+      date: new Date(),
+      amount: 250,
+      type: "food",
+    },
+    {
+      item: "Flight",
+      date: new Date(),
+      amount: 1000,
+      type: "travel",
+    },
   ],
+  itemsPerPage: 3,
+  currentPage: 1,
 };
 
 function reducer(state, action) {
@@ -57,6 +71,14 @@ function reducer(state, action) {
           el.name === type ? { ...el, value: el.value + Number(amount) } : el
         ),
       };
+
+    case "transactions/changePage":
+      return { ...state, currentPage: action.payload };
+    case "transactions/rightPage":
+      return { ...state, currentPage: state.currentPage + 1 };
+    case "transactions/leftPage":
+      return { ...state, currentPage: state.currentPage - 1 };
+
     default:
       throw new Error("action type unknown!");
   }
@@ -64,7 +86,14 @@ function reducer(state, action) {
 
 function DataProvider({ children }) {
   const [
-    { walletBalance, totalExpense, expenseType, recentTransactions },
+    {
+      walletBalance,
+      totalExpense,
+      expenseType,
+      recentTransactions,
+      itemsPerPage,
+      currentPage,
+    },
     dispatch,
   ] = useReducer(reducer, initialState);
 
@@ -75,6 +104,8 @@ function DataProvider({ children }) {
         totalExpense,
         expenseType,
         recentTransactions,
+        itemsPerPage,
+        currentPage,
         dispatch,
       }}
     >
