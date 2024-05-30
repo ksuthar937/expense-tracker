@@ -1,41 +1,46 @@
-import { createContext, useContext, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 
 const DataContext = createContext();
 
 const initialState = {
-  walletBalance: 3250,
-  totalExpense: 1750,
-  expenseType: [
-    { name: "entertainment", value: 300 },
-    { name: "food", value: 400 },
-    { name: "travel", value: 1050 },
-  ],
   recentTransactions: [
     {
+      id: 1,
       item: "Samosa",
       date: new Date(),
       amount: 150,
       type: "food",
     },
     {
+      id: 2,
       item: "Movie",
       date: new Date(),
       amount: 300,
       type: "entertainment",
     },
     {
+      id: 3,
       item: "Auto",
       date: new Date(),
       amount: 50,
       type: "travel",
     },
     {
+      id: 4,
       item: "Pizza",
       date: new Date(),
       amount: 250,
       type: "food",
     },
     {
+      id: 5,
       item: "Flight",
       date: new Date(),
       amount: 1000,
@@ -48,27 +53,35 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case "income/add":
-      return { ...state, walletBalance: state.walletBalance + action.payload };
     case "expense/add":
-      const { item, date, amount, type } = action.payload;
-      const dateCheck = new Date(date);
-      console.log(dateCheck);
+      let { item, date, amount, type } = action.payload;
+      const itemId = state.recentTransactions.length + 1;
       return {
         ...state,
         recentTransactions: [
           ...state.recentTransactions,
           {
+            id: itemId,
             item: item,
             date: new Date(date),
             amount: Number(amount),
             type: type,
           },
         ],
-        totalExpense: state.totalExpense + Number(amount),
-        walletBalance: state.walletBalance - Number(amount),
-        expenseType: state.expenseType.map((el) =>
-          el.name === type ? { ...el, value: el.value + Number(amount) } : el
+      };
+    case "expense/edit":
+      return {
+        ...state,
+        recentTransactions: state.recentTransactions.map((transaction) =>
+          transaction.id === action.payload.id
+            ? {
+                id: action.payload.id,
+                item: action.payload.item,
+                date: new Date(action.payload.date),
+                amount: Number(action.payload.amount),
+                type: action.payload.type,
+              }
+            : transaction
         ),
       };
 
@@ -85,17 +98,47 @@ function reducer(state, action) {
 }
 
 function DataProvider({ children }) {
-  const [
-    {
-      walletBalance,
-      totalExpense,
-      expenseType,
-      recentTransactions,
-      itemsPerPage,
-      currentPage,
-    },
-    dispatch,
-  ] = useReducer(reducer, initialState);
+  const [{ recentTransactions, itemsPerPage, currentPage }, dispatch] =
+    useReducer(reducer, initialState);
+
+  //Derive states based on recentTransactionss
+
+  const [totalExpense, setTotalExpense] = useState(0);
+
+  const [walletBalance, setWalletBalance] = useState(5000);
+
+  const [expenseType, setExpenseType] = useState([
+    { name: "entertainment", value: 0 },
+    { name: "food", value: 0 },
+    { name: "travel", value: 0 },
+  ]);
+
+  const prevTotalExpenseRef = useRef(0);
+
+  const handleWalletBalance = (amount) => {
+    setWalletBalance((prev) => prev + Number(amount));
+  };
+
+  useEffect(() => {
+    const total = recentTransactions.reduce((acc, val) => acc + val.amount, 0);
+    setTotalExpense(total);
+
+    const updatedExpenseType = expenseType.map((expense) => {
+      const totalAmount = recentTransactions
+        .filter((transaction) => transaction.type === expense.name)
+        .reduce((sum, transaction) => sum + transaction.amount, 0);
+      return { ...expense, value: totalAmount };
+    });
+    setExpenseType(updatedExpenseType);
+
+    //updating wallet balance acc. to expenses
+    const prevTotalExpense = prevTotalExpenseRef.current;
+    const difference = total - prevTotalExpense;
+    setWalletBalance((prev) => prev - difference);
+    prevTotalExpenseRef.current = total;
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recentTransactions]);
 
   return (
     <DataContext.Provider
@@ -107,6 +150,7 @@ function DataProvider({ children }) {
         itemsPerPage,
         currentPage,
         dispatch,
+        handleWalletBalance,
       }}
     >
       {children}

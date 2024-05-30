@@ -44,9 +44,10 @@ const Transactions = () => {
       <h1 className={classes.heading}>Recent Transactions</h1>
       <div className={classes.outer}>
         <div>
-          {recentTransactionsPerScreen.map((item, index) => (
+          {recentTransactionsPerScreen.map((item) => (
             <TransactionItem
-              key={index}
+              key={item.id}
+              id={item.id}
               name={item.item}
               date={item.date}
               amount={item.amount}

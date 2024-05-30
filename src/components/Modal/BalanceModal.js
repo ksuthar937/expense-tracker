@@ -23,7 +23,8 @@ Modal.setAppElement("#root");
 
 const BalanceModal = ({ modalIsOpen, closeModal }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { dispatch } = useData();
+  // const { dispatch  } = useData();
+  const { handleWalletBalance } = useData();
 
   const [balance, setBalance] = useState(0);
 
@@ -33,7 +34,8 @@ const BalanceModal = ({ modalIsOpen, closeModal }) => {
       enqueueSnackbar("Amount should be more than 0");
       closeModal();
     } else {
-      dispatch({ type: "income/add", payload: Number(balance) });
+      // dispatch({ type: "income/add", payload: Number(balance) });
+      handleWalletBalance(balance);
       closeModal();
     }
   };
