@@ -7,46 +7,51 @@ import {
   useState,
 } from "react";
 
+// const DATA = [
+//   {
+//     id: 1,
+//     item: "Samosa",
+//     date: new Date(),
+//     amount: 150,
+//     type: "food",
+//   },
+//   {
+//     id: 2,
+//     item: "Movie",
+//     date: new Date(),
+//     amount: 300,
+//     type: "entertainment",
+//   },
+//   {
+//     id: 3,
+//     item: "Auto",
+//     date: new Date(),
+//     amount: 50,
+//     type: "travel",
+//   },
+//   {
+//     id: 4,
+//     item: "Pizza",
+//     date: new Date(),
+//     amount: 250,
+//     type: "food",
+//   },
+//   {
+//     id: 5,
+//     item: "Flight",
+//     date: new Date(),
+//     amount: 1000,
+//     type: "travel",
+//   },
+// ];
+
+const intialRecentTransactions =
+  JSON.parse(localStorage.getItem("transactions")) || [];
+
 const DataContext = createContext();
 
 const initialState = {
-  recentTransactions: [
-    {
-      id: 1,
-      item: "Samosa",
-      date: new Date(),
-      amount: 150,
-      type: "food",
-    },
-    {
-      id: 2,
-      item: "Movie",
-      date: new Date(),
-      amount: 300,
-      type: "entertainment",
-    },
-    {
-      id: 3,
-      item: "Auto",
-      date: new Date(),
-      amount: 50,
-      type: "travel",
-    },
-    {
-      id: 4,
-      item: "Pizza",
-      date: new Date(),
-      amount: 250,
-      type: "food",
-    },
-    {
-      id: 5,
-      item: "Flight",
-      date: new Date(),
-      amount: 1000,
-      type: "travel",
-    },
-  ],
+  recentTransactions: intialRecentTransactions,
   itemsPerPage: 3,
   currentPage: 1,
 };
@@ -110,10 +115,12 @@ function DataProvider({ children }) {
 
   //Derive states based on recentTransactionss
 
+  const initialWalletBalance =
+    Number(localStorage.getItem("userWallet")) || 5000;
+
   const [totalExpense, setTotalExpense] = useState(0);
 
-  const [walletBalance, setWalletBalance] = useState(5000);
-
+  const [walletBalance, setWalletBalance] = useState(initialWalletBalance);
   const [expenseType, setExpenseType] = useState([
     { name: "entertainment", value: 0 },
     { name: "food", value: 0 },
@@ -123,8 +130,20 @@ function DataProvider({ children }) {
   const prevTotalExpenseRef = useRef(0);
 
   const handleWalletBalance = (amount) => {
-    setWalletBalance((prev) => prev + Number(amount));
+    setWalletBalance((prev) => {
+      const balance = prev + Number(amount);
+      localStorage.setItem("userWallet", balance);
+      return balance;
+    });
   };
+
+  useEffect(() => {
+    localStorage.setItem("transactions", JSON.stringify(recentTransactions));
+  }, [recentTransactions]);
+
+  useEffect(() => {
+    localStorage.setItem("userWallet", walletBalance);
+  }, [walletBalance]);
 
   useEffect(() => {
     const total = recentTransactions.reduce((acc, val) => acc + val.amount, 0);
@@ -138,10 +157,14 @@ function DataProvider({ children }) {
     });
     setExpenseType(updatedExpenseType);
 
-    //updating wallet balance acc. to expenses
+    // updating wallet balance according to total expenses
     const prevTotalExpense = prevTotalExpenseRef.current;
     const difference = total - prevTotalExpense;
-    setWalletBalance((prev) => prev - difference);
+    setWalletBalance((prev) => {
+      const balance = prev - difference;
+      localStorage.setItem("userWallet", balance);
+      return balance;
+    });
     prevTotalExpenseRef.current = total;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

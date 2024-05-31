@@ -30,6 +30,8 @@ const Data = [
 const Transactions = () => {
   const { recentTransactions, itemsPerPage, currentPage } = useData();
 
+  console.log(recentTransactions);
+
   const lastIndex = currentPage * itemsPerPage;
 
   const firstIndex = lastIndex - itemsPerPage;
@@ -49,7 +51,7 @@ const Transactions = () => {
               key={item.id}
               id={item.id}
               name={item.item}
-              date={item.date}
+              date={new Date(item.date)}
               amount={item.amount}
               type={item.type}
             />
